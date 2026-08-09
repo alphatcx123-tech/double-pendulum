@@ -1,767 +1,782 @@
-README.md
+# ⚙️ CON LẮC KÉP — PHÒNG THÍ NGHIỆM ĐỘNG LỰC HỌC
 
+> **Mô phỏng tương tác con lắc kép phục vụ học tập, giảng dạy và khảo sát các hiện tượng động lực học.**
 
-Con lắc kép --- Phòng thí nghiệm động lực học nâng cao
-1. Tổng quan
-Đây là một mô phỏng con lắc kép dùng giao diện HTML/CSS/JavaScript,
-hướng tới việc quan sát và khảo sát các đại lượng cơ học của hệ con lắc
-kép.
+---
 
-Trong giao diện hiện tại, tiêu đề dự án là "Con lắc kép --- Phòng thí
-nghiệm động lực học nâng cao" và mô hình được mô tả là:
+## 📌 Giới thiệu
 
-Phòng thí nghiệm động lực học --- mô hình cơ học Lagrange + RK4
+**Con lắc kép — Phòng thí nghiệm động lực học** là mô phỏng tương tác được xây dựng bằng **HTML, CSS và JavaScript**, cho phép người học trực tiếp thay đổi các tham số của hệ và quan sát phản ứng của chuyển động theo thời gian.
 
-Mô phỏng có một vùng canvas để hiển thị chuyển động và một bảng điều
-khiển cho phép thay đổi nhiều thông số vật lý, môi trường, lực ngoài và
-điều kiện ban đầu.
+Mô phỏng tập trung vào việc trực quan hóa:
 
-2. Cấu trúc dự án
-Cấu trúc nên dùng khi triển khai GitHub Pages:
+* Chuyển động của hệ con lắc kép
+* Điều kiện ban đầu
+* Khối lượng và hình học
+* Trọng trường
+* Ma sát và tiêu hao năng lượng
+* Lực cản không khí
+* Gió và môi trường
+* Lực tác dụng bên ngoài
+* Rung điểm treo
+* Động năng và thế năng
+* Động lượng và mô-men động lượng
+* Vận tốc và gia tốc
+* Chuyển động của khối tâm
 
+---
+
+## 🧩 Cấu trúc dự án
+
+```text
 double-pendulum/
+│
 ├── index.html
 ├── index.css
 └── index.js
-Vai trò từng file
-File Chức năng
+```
 
-index.html Cấu trúc giao diện, bảng điều
-khiển, canvas và các thành phần đo
-lường
+| File         | Chức năng                                     |
+| ------------ | --------------------------------------------- |
+| `index.html` | Cấu trúc và các thành phần của giao diện      |
+| `index.css`  | Thiết kế giao diện và bố cục                  |
+| `index.js`   | Logic mô phỏng, tính toán vật lý và tương tác |
 
-index.css Giao diện, bố cục, màu sắc, thanh
-điều khiển và trạng thái hiển thị
+### Liên kết file
 
-Liên kết trong index.html
-Nếu đổi tên CSS và JavaScript thành index.css và index.js, phần
-<head> và cuối <body> phải dùng:
+Trong `index.html`:
 
+```html
 <link rel="stylesheet" href="index.css">
-và:
-
 <script src="index.js"></script>
-Không cần đổi các id, class hoặc cấu trúc HTML khác chỉ vì đổi tên
-file.
+```
 
-3. Vì sao phải dùng index.html?
-GitHub Pages sẽ ưu tiên tìm file:
+> ⚠️ Ba file nên được đặt cùng thư mục nếu sử dụng các đường dẫn trên.
 
-index.html
-làm trang chính của thư mục.
+---
 
-Vì vậy URL dạng:
+# 🔬 Mô hình vật lý
 
-https://ten-tai-khoan.github.io/ten-repository/
-có thể mở trực tiếp trang mô phỏng nếu repository có:
+Mô phỏng sử dụng mô hình:
 
-index.html
-ở đúng thư mục được GitHub Pages phục vụ.
+**Cơ học Lagrange + phương pháp tích phân RK4**
 
-4. Thành phần giao diện chính
-Giao diện gồm hai khu vực:
+### Lagrange
 
-4.1. Khu vực mô phỏng
-HTML sử dụng:
+Phương pháp Lagrange được sử dụng để mô tả động lực học của hệ thông qua các tọa độ suy rộng của con lắc.
 
-<canvas id="cv"></canvas>
-Canvas là vùng hiển thị mô phỏng chuyển động của hệ con lắc.
+Các đại lượng cơ bản gồm:
 
-Ngoài ra có nút:
-
-▶
-để thu gọn hoặc mở rộng bảng điều khiển.
-
-4.2. Bảng điều khiển
-Bảng điều khiển có nhiều nhóm thông số:
-
-Âm thanh & tính năng thực tế
-
-Camera & quan sát
-
-Thông số khối lượng
-
-Hình học & cấu trúc
-
-Điều kiện ban đầu
-
-Vật liệu & hao mòn ổ khớp
-
-Không khí & gió động
-
-Môi trường nâng cao & rung
-
-Lực ngoại vi
-
-Điều khiển mô phỏng
-
-Bảng đo lường năng lượng
-
-Cảm biến động lực học chi tiết
-
-5. Âm thanh và tính năng thực tế
-Có hai tùy chọn:
-
-Âm thanh mô phỏng
-Âm thanh mô phỏng (Gió & Khớp ma sát)
-Cho phép bật/tắt âm thanh mô phỏng.
-
-Chế độ độ mòn vô hạn
-Chế độ độ mòn vô hạn (Không đứt, bỏ qua 100%)
-Giao diện cung cấp tùy chọn để kiểm soát việc mô phỏng độ mòn và trạng
-thái đứt.
-
-6. Camera và quan sát
-Các thông số quan sát gồm:
-
-Zoom
-
-Camera X
-
-Camera Y
-
-Lưới tọa độ
-
-Vector vận tốc và gió
-
-Nhãn vật lý
-
-Giao diện hướng dẫn thao tác trực tiếp:
-
-Kéo m₁, m₂ để thay đổi vị trí.
-
-Kéo nền để thay đổi góc nhìn.
-
-Cuộn chuột để zoom.
-
-7. Hệ thống khối lượng
-Mô hình cho phép điều chỉnh 8 thành phần khối lượng.
-
-7.1. Vật 1
-Ký hiệu:
-
-m₁
-Đây là khối lượng vật thứ nhất.
-
-7.2. Vật 2
-Ký hiệu:
-
-m₂
-Đây là khối lượng vật thứ hai.
-
-7.3. Khối lượng thanh
-M₁
-M₂
-Tương ứng với khối lượng của thanh 1 và thanh 2.
-
-7.4. Khối lượng giữa thanh
-m₁ giữa
-m₂ giữa
-Cho phép thêm khối lượng tập trung tại vùng giữa mỗi thanh.
-
-7.5. Khối lượng đầu thanh
-m₁ đầu
-m₂ đầu
-Cho phép thêm khối lượng tập trung ở đầu thanh.
-
-Các thông số này làm cho mô hình có thể biểu diễn nhiều cấu hình phân bố
-khối lượng khác nhau.
-
-8. Hình học và cấu trúc
-Các thông số hình học gồm:
-
-Chiều dài
-L₁
-L₂
-là chiều dài hai thanh.
-
-Đường kính thanh
-d₁
-d₂
-Bán kính vật
-r₁
-r₂
-Các thông số này được sử dụng để mô tả kích thước hình học của hệ.
-
-9. Điều kiện ban đầu
-Có bốn thông số quan trọng:
-
+```text
 θ₁
 θ₂
 ω₁
 ω₂
+α₁
+α₂
+```
+
 Trong đó:
 
-θ₁: góc ban đầu của thanh thứ nhất.
+* `θ₁`, `θ₂`: góc của hai thanh
+* `ω₁`, `ω₂`: vận tốc góc
+* `α₁`, `α₂`: gia tốc góc
 
-θ₂: góc ban đầu của thanh thứ hai.
+### RK4
 
-ω₁: vận tốc góc ban đầu của thanh thứ nhất.
+**Runge–Kutta bậc 4 (RK4)** được sử dụng để tích phân hệ phương trình vi phân theo thời gian.
 
-ω₂: vận tốc góc ban đầu của thanh thứ hai.
+Điều này giúp mô phỏng chuyển động liên tục của hệ trên máy tính.
 
-Đây là nhóm thông số rất quan trọng khi khảo sát tính nhạy cảm của con
-lắc kép đối với điều kiện ban đầu.
+---
 
-10. Gia tốc trọng trường
+# ⚙️ Các thông số mô phỏng
+
+## 1. Khối lượng
+
+Mô phỏng cho phép điều chỉnh:
+
+```text
+m₁
+m₂
+M₁
+M₂
+m₁ giữa
+m₂ giữa
+m₁ đầu
+m₂ đầu
+```
+
+Các thông số này cho phép khảo sát ảnh hưởng của sự phân bố khối lượng đến chuyển động.
+
+---
+
+## 2. Hình học
+
+Các thông số hình học:
+
+```text
+L₁
+L₂
+d₁
+d₂
+r₁
+r₂
+```
+
+Trong đó:
+
+* `L₁`, `L₂`: chiều dài thanh
+* `d₁`, `d₂`: đường kính thanh
+* `r₁`, `r₂`: bán kính vật
+
+---
+
+## 3. Điều kiện ban đầu
+
+```text
+θ₁
+θ₂
+ω₁
+ω₂
+```
+
+Đây là nhóm thông số đặc biệt quan trọng khi khảo sát sự phụ thuộc của chuyển động vào điều kiện ban đầu.
+
+Một thay đổi rất nhỏ trong điều kiện ban đầu có thể dẫn tới sự khác biệt đáng kể trong quỹ đạo theo thời gian.
+
+---
+
+# 🌍 Trọng trường
+
 Thông số:
 
+```text
 g
-có thể thay đổi trong giao diện.
+```
 
-Có sẵn các lựa chọn:
+Có thể khảo sát các trường hợp:
 
-Thiên thể / trạng thái Giá trị
+| Môi trường        |          `g` |
+| ----------------- | -----------: |
+| 🌎 Trái Đất       |  `9.81 m/s²` |
+| 🌙 Mặt Trăng      |  `1.62 m/s²` |
+| 🔴 Sao Hỏa        |  `3.71 m/s²` |
+| 🪐 Mộc Tinh       | `24.79 m/s²` |
+| ∅ Không trọng lực |     `0 m/s²` |
 
-Trái Đất 9.81 m/s²
-Mặt Trăng 1.62 m/s²
-Sao Hỏa 3.71 m/s²
-Mộc Tinh 24.79 m/s²
-Không trọng lực 0 m/s²
+---
 
-Điều này cho phép so sánh chuyển động của hệ trong các trường trọng lực
-khác nhau.
+# 🧲 Ma sát và hao mòn
 
-11. Vật liệu và hao mòn
-Có các lựa chọn vật liệu:
+Mô phỏng có các tham số:
 
-s1 - Vật liệu gốc
-s2 - Thép
-s3 - Titanium
-s4 - Sắt
-s5 - Dây thừng
-Giao diện mô tả nhóm này liên quan đến khả năng chịu lực ly tâm và tốc
-độ hao mòn khớp nối khi quay nhanh.
-
-Ngoài vật liệu, có:
-
+```text
 b₁
 b₂
-là các hệ số nhớt/giảm chấn.
-
-Và:
-
 f₁
 f₂
-là các thông số ma sát khô.
-
-Thông số:
-
 wearRate
-là hệ số mòn cơ bản.
+```
 
-12. Không khí và gió
-Mô phỏng cung cấp một nhóm thông số môi trường khá rộng.
+Có thể khảo sát:
 
-12.1. Nhiệt độ
+* Ma sát nhớt
+* Ma sát khô
+* Tiêu hao năng lượng
+* Hao mòn khớp
+* Ảnh hưởng của ma sát đến biên độ chuyển động
+
+---
+
+# 🌬️ Không khí và gió
+
+Các thông số môi trường gồm:
+
+```text
 T
-Giao diện cho phép thay đổi nhiệt độ.
-
-12.2. Áp suất
 p
-12.3. Gió tĩnh
 wind
-12.4. Hướng gió
 windAng
-12.5. Gió giật
 gust
-12.6. Chu kỳ gió giật
 gustP
-12.7. Hệ số cản
 Cd
-cho vật và:
-
 rodCd
-cho thanh.
+```
 
-Có thể bật/tắt:
+Có thể bật:
 
+```text
 Cản không khí
 Bật gió
-13. Môi trường chất lưu
-Có thêm các thông số:
+```
 
+và thay đổi các tham số để khảo sát ảnh hưởng của môi trường đến chuyển động.
+
+---
+
+# 🌊 Môi trường chất lưu
+
+Mô phỏng hỗ trợ thêm:
+
+```text
 μ
 ρf
-Trong đó giao diện mô tả:
+```
 
-μ: độ nhớt.
+cũng như tùy chọn:
 
-ρf: mật độ chất lưu.
-
-Có tùy chọn:
-
+```text
 Lực đẩy Archimedes
-để xét thêm lực đẩy nổi trong mô phỏng.
+```
 
-14. Môi trường nâng cao và rung
-Nhóm này gồm:
+Nhờ đó có thể khảo sát hệ trong những điều kiện môi trường khác nhau.
 
-Hệ số ρ khí
-Hệ số nhớt môi trường
+---
+
+# 📳 Rung điểm treo
+
+Các tham số:
+
+```text
 Biên độ rung
 Tần số rung
 Hướng rung
-Các thông số cho phép khảo sát hệ trong môi trường có chuyển động hoặc
-rung của điểm treo.
+```
 
-15. Lực ngoại vi
-Mô phỏng cho phép tác dụng một lực ngoài:
+cho phép khảo sát phản ứng của hệ khi điểm treo có dao động.
 
+---
+
+# 💥 Lực ngoại vi
+
+Có thể tác dụng lực ngoài thông qua:
+
+```text
 F
-với:
-
 Hướng lực
 Thời gian
-Có thể chọn lực tác dụng lên:
+```
 
+và lựa chọn tác dụng lên:
+
+```text
 m₁
+```
+
 hoặc:
 
+```text
 m₂
-Sau khi thiết lập thông số, dùng nút:
+```
 
-Tác dụng lực
-để kích hoạt lực ngoài.
+Sau khi thiết lập thông số, sử dụng nút:
 
-16. Điều khiển mô phỏng
-Có hai thông số chính:
+**Tác dụng lực**
 
-Tốc độ thời gian
-speed
-Cho phép tăng hoặc giảm tốc độ diễn tiến của mô phỏng.
+để đưa lực vào mô phỏng.
 
-Vệt quỹ đạo
-trail
-Cho phép điều chỉnh độ dài vệt quỹ đạo của vật.
+---
 
-Các nút:
+# 📊 Hệ thống đo lường
 
-Tạm dừng
-Reset hệ thống
-cho phép dừng/tiếp tục và đưa hệ về trạng thái ban đầu.
+Mô phỏng cung cấp bảng đo lường động lực học theo thời gian thực.
 
-17. Mô hình cơ học
-Theo mô tả trong giao diện, mô phỏng sử dụng:
+## Góc
 
-mô hình cơ học Lagrange + RK4
-Điều này cho biết hai thành phần chính:
-
-Phương pháp Lagrange
-Dùng để xây dựng động lực học của hệ cơ học thông qua tọa độ suy rộng,
-chẳng hạn các góc của hai thanh.
-
-RK4
-RK4 là phương pháp Runge--Kutta bậc 4 dùng để tích phân phương trình vi
-phân theo thời gian.
-
-Trong mô phỏng số, chất lượng kết quả phụ thuộc vào mô hình động lực
-học, bước thời gian và cách xử lý các hiệu ứng phụ như ma sát, lực cản
-và lực ngoài.
-
-18. Các đại lượng động học được hiển thị
-Bảng cảm biến hiển thị:
-
-Góc
+```text
 θ₁
 θ₂
-đơn vị độ.
+```
 
-Vận tốc góc
+## Vận tốc góc
+
+```text
 ω₁
 ω₂
-đơn vị:
+```
 
-rad/s
-Gia tốc góc
+**Đơn vị:** `rad/s`
+
+## Gia tốc góc
+
+```text
 α₁
 α₂
-đơn vị:
+```
 
-rad/s²
-19. Vận tốc và gia tốc không gian
-Giao diện hiển thị:
+**Đơn vị:** `rad/s²`
 
+---
+
+# 🏃 Vận tốc và gia tốc
+
+Các đại lượng:
+
+```text
 |v₁|
 |v₂|
-đơn vị:
+```
 
+Đơn vị:
+
+```text
 m/s
+```
+
 và:
 
+```text
 |a₁|
 |a₂|
-đơn vị:
+```
 
+Đơn vị:
+
+```text
 m/s²
-Những đại lượng này giúp quan sát chuyển động của hai vật theo thời
-gian.
+```
 
-20. Lực và mô-men
-Bảng đo lường hiển thị:
+---
 
+# 🔗 Lực và mô-men
+
+Mô phỏng hiển thị:
+
+```text
 T₁
 T₂
-được ghi là lực căng thanh.
+```
 
-Ngoài ra:
+là lực căng thanh theo cách biểu diễn của mô phỏng.
 
+Mô-men ma sát:
+
+```text
 τ_f1
 τ_f2
-là mô-men ma sát.
+```
 
-Công suất tiêu tán:
+Công suất tiêu hao:
 
+```text
 P_loss
-được hiển thị theo đơn vị watt.
+```
 
-21. Năng lượng
-Mô phỏng có bảng năng lượng gồm ba thanh đo:
+Đơn vị:
 
-Động năng
-K
-Thế năng
-U
-Tiêu hao
-Loss
-Ngoài ra cảm biến hiển thị:
+```text
+W
+```
 
+---
+
+# ⚡ Năng lượng
+
+Hệ thống theo dõi:
+
+```text
 K
 U
 E
 ΔE
 W_ext
+Loss
+```
+
 Trong đó:
 
-K: tổng động năng.
+| Ký hiệu | Ý nghĩa                         |
+| ------- | ------------------------------- |
+| `K`     | Động năng                       |
+| `U`     | Thế năng                        |
+| `E`     | Cơ năng                         |
+| `ΔE`    | Độ thay đổi/sai lệch năng lượng |
+| `W_ext` | Công của lực ngoài              |
+| `Loss`  | Năng lượng tiêu hao             |
 
-U: tổng thế năng.
+Đây là nhóm đại lượng quan trọng để kiểm tra sự trao đổi và thất thoát năng lượng trong mô phỏng.
 
-E: cơ năng toàn phần.
+---
 
-ΔE: sai lệch cơ năng.
+# 🎯 Khối tâm
 
-W_ext: công của lực ngoài.
+Vị trí khối tâm được biểu diễn dưới dạng:
 
-Nhóm thông số này đặc biệt hữu ích khi kiểm tra sự trao đổi năng lượng
-trong hệ.
-
-22. Khối tâm
-Giao diện hiển thị tọa độ khối tâm:
-
+```text
 CM = (xCM, yCM)
-đơn vị:
+```
 
-m
-Đây là một đại lượng quan trọng khi phân tích chuyển động tổng thể của
-hệ.
-
-23. Động lượng
-Mô phỏng hiển thị:
-
-|P|
 với đơn vị:
 
+```text
+m
+```
+
+---
+
+# 🌀 Động lượng và mô-men động lượng
+
+Động lượng:
+
+```text
+|P|
+```
+
+Đơn vị:
+
+```text
 kg·m/s
-Đây là độ lớn của động lượng tuyến tính của hệ theo cách hiển thị của mô
-phỏng.
+```
+
+Mô-men động lượng:
+
+```text
+|L|
+```
+
+Đơn vị:
+
+```text
+kg·m²/s
+```
+
+---
+
+# 🎥 Điều khiển mô phỏng
+
+Các chức năng chính:
+
+```text
+▶ / Tạm dừng
+↻ Reset hệ thống
+```
 
 Ngoài ra có:
 
-|L|
-với đơn vị:
+```text
+Zoom
+Camera X
+Camera Y
+Lưới tọa độ
+Vector vận tốc và gió
+Nhãn vật lý
+Vệt quỹ đạo
+Tốc độ thời gian
+```
 
-kg·m²/s
-là độ lớn mô-men động lượng được hiển thị.
+### Điều khiển chuột
 
-24. Mật độ không khí
-Cảm biến môi trường hiển thị:
+* **Kéo vật** để thay đổi vị trí.
+* **Kéo nền** để di chuyển camera.
+* **Cuộn chuột** để zoom.
 
-ρ
-với đơn vị:
+---
 
-kg/m³
-Thông số này liên quan đến trạng thái môi trường không khí được sử dụng
-trong mô phỏng.
+# 🧪 Các thí nghiệm đề xuất
 
-25. Ý nghĩa giáo dục
-Mô phỏng phù hợp để minh họa nhiều nội dung cơ học:
+## Thí nghiệm 01 — Điều kiện ban đầu
 
-Chuyển động quay.
+Giữ nguyên các thông số khác và thay đổi rất nhỏ:
 
-Vận tốc góc.
+```text
+θ₂
+```
 
-Gia tốc góc.
+So sánh hai quỹ đạo theo thời gian.
 
-Động lực học hệ nhiều vật.
+### Mục tiêu
 
-Ảnh hưởng của điều kiện ban đầu.
+Quan sát sự nhạy cảm của hệ đối với điều kiện ban đầu.
 
-Trao đổi động năng và thế năng.
+---
 
-Ma sát và tiêu hao năng lượng.
-
-Lực cản môi trường.
-
-Tác dụng của lực ngoài.
-
-Ảnh hưởng của trọng trường.
-
-Ảnh hưởng của khối lượng và chiều dài.
-
-Chuyển động của khối tâm.
-
-Động lượng và mô-men động lượng.
-
-Mô phỏng số bằng phương pháp RK4.
-
-26. Một số thí nghiệm đề xuất
-Thí nghiệm 1 --- Ảnh hưởng của góc ban đầu
-Giữ nguyên:
-
-m₁ = m₂
-L₁ = L₂
-ω₁ = ω₂ = 0
-Thay đổi θ₂ một lượng nhỏ.
-
-Quan sát sự khác biệt của quỹ đạo theo thời gian.
-
-Mục tiêu: khảo sát tính nhạy cảm của chuyển động con lắc kép đối với
-điều kiện ban đầu.
-
-Thí nghiệm 2 --- Ảnh hưởng của chiều dài
-Giữ các thông số khối lượng không đổi.
+## Thí nghiệm 02 — Chiều dài con lắc
 
 Thay đổi:
 
+```text
 L₁
 L₂
+```
+
 Quan sát:
 
-Chu kỳ chuyển động.
+* Quỹ đạo
+* Vận tốc
+* Gia tốc
+* Năng lượng
 
-Tốc độ của vật.
+---
 
-Quỹ đạo.
+## Thí nghiệm 03 — Trọng trường
 
-Năng lượng.
-
-Thí nghiệm 3 --- Ảnh hưởng của trọng trường
 Lần lượt chọn:
 
+```text
 Trái Đất
 Mặt Trăng
 Sao Hỏa
 Mộc Tinh
 Không trọng lực
-Quan sát sự thay đổi của chuyển động.
+```
 
-Thí nghiệm 4 --- Ma sát
+So sánh chuyển động.
+
+---
+
+## Thí nghiệm 04 — Ma sát
+
 Tăng:
 
+```text
 b₁
 b₂
-và quan sát tốc độ suy giảm chuyển động.
+```
+
+Quan sát sự suy giảm chuyển động.
 
 Sau đó thay đổi:
 
+```text
 f₁
 f₂
-để khảo sát ảnh hưởng của ma sát khô.
+```
 
-Thí nghiệm 5 --- Cản không khí
+để khảo sát ma sát khô.
+
+---
+
+## Thí nghiệm 05 — Cản không khí
+
 Bật:
 
+```text
 Cản không khí
+```
+
 Sau đó thay đổi:
 
+```text
 Cd
 rodCd
+```
+
 So sánh với trường hợp không có cản.
 
-Thí nghiệm 6 --- Tác dụng lực ngoài
-Chọn:
+---
 
+## Thí nghiệm 06 — Lực ngoài
+
+Thay đổi:
+
+```text
 F
 Hướng lực
 Thời gian
-Sau đó chọn vị trí tác dụng:
+```
 
-m₁ hoặc m₂
-và nhấn:
+Sau đó tác dụng lên `m₁` hoặc `m₂`.
 
-Tác dụng lực
-Quan sát sự thay đổi của vận tốc, năng lượng và quỹ đạo.
+Quan sát sự thay đổi của:
 
-Thí nghiệm 7 --- Rung điểm treo
-Tăng:
+```text
+v
+a
+K
+U
+E
+```
 
+---
+
+## Thí nghiệm 07 — Rung điểm treo
+
+Thay đổi:
+
+```text
 Biên độ rung
 Tần số rung
 Hướng rung
+```
+
 Quan sát phản ứng của hệ.
 
-27. Quy trình kiểm tra mô phỏng
-Khi phát triển hoặc chỉnh sửa code, nên kiểm tra theo thứ tự:
+---
 
-Mở trang khi chưa có ngoại lực.
+# 🎓 Ứng dụng trong dạy học
 
-Kiểm tra hai vật xuất hiện đúng vị trí.
+Mô phỏng có thể hỗ trợ các chủ đề:
 
-Kiểm tra nút Tạm dừng.
+* Chuyển động quay
+* Động lực học
+* Vận tốc góc
+* Gia tốc góc
+* Năng lượng
+* Động lượng
+* Mô-men động lượng
+* Ma sát
+* Lực cản
+* Lực ngoài
+* Trọng trường
+* Khối tâm
+* Dao động
+* Mô phỏng số
 
-Kiểm tra Reset.
+Đặc biệt phù hợp để sử dụng như một **phòng thí nghiệm ảo**, giúp học sinh quan sát trực tiếp mối quan hệ giữa tham số đầu vào và kết quả chuyển động.
 
-Thay đổi m₁, m₂.
+---
 
-Thay đổi L₁, L₂.
+# 🛠️ Quy tắc phát triển
 
-Thay đổi θ₁, θ₂.
+Khi chỉnh sửa dự án, cần phân biệt rõ:
 
-Thay đổi ω₁, ω₂.
+### HTML
 
-Thay đổi g.
+Chịu trách nhiệm về:
 
-Bật/tắt cản không khí.
+```text
+Cấu trúc
+Nội dung
+Nút
+Thanh điều khiển
+Canvas
+Bảng đo
+```
 
-Bật/tắt gió.
+### CSS
 
-Thay đổi ma sát.
+Chịu trách nhiệm về:
 
-Tác dụng lực ngoài.
+```text
+Màu sắc
+Bố cục
+Kích thước
+Font
+Responsive
+Hiệu ứng giao diện
+```
 
-Kiểm tra bảng năng lượng.
+### JavaScript
 
-Kiểm tra cảm biến động lực học.
+Chịu trách nhiệm về:
 
-Kiểm tra thao tác kéo vật bằng chuột.
+```text
+Tính toán vật lý
+Mô phỏng
+Animation
+Tương tác
+Cảm biến
+Năng lượng
+Điều khiển
+```
 
-Kiểm tra zoom và camera.
+> **Tách file không được làm thay đổi mô hình vật lý.**
 
-Kiểm tra GitHub Pages sau khi đổi tên file.
+Nếu mục tiêu chỉ là tổ chức lại mã nguồn, cần giữ nguyên logic tính toán và chỉ chuyển phần mã sang file tương ứng.
 
-28. Lưu ý khi tách file
-Khi tách một file HTML lớn thành ba file, nguyên tắc an toàn là:
+---
 
-HTML → chỉ chứa cấu trúc trang
-CSS  → chứa phần <style>
-JS   → chứa phần <script>
-Không nên viết lại các phương trình vật lý chỉ vì tách file.
+# 🌐 Triển khai GitHub Pages
 
-Mục tiêu của việc tách file là thay đổi cấu trúc lưu trữ mã nguồn,
-không thay đổi mô hình vật lý.
+Cấu trúc khuyến nghị:
 
-29. Kiểm tra tên file
-Nếu sử dụng:
-
-index.html
-index.css
-index.js
-thì trong HTML phải có:
-
-<link rel="stylesheet" href="index.css">
-và:
-
-<script src="index.js"></script>
-Ba file cần nằm cùng thư mục:
-
+```text
 double-pendulum/
 ├── index.html
 ├── index.css
 └── index.js
-Không được để:
+```
 
-index.html
-css/index.css
-js/index.js
-trừ khi đường dẫn trong HTML cũng được đổi tương ứng.
+`index.html` là trang chính.
 
-30. Triển khai GitHub Pages
-Quy trình cơ bản:
+Trong HTML:
 
-Bước 1
-Đưa ba file lên repository:
+```html
+<link rel="stylesheet" href="index.css">
+<script src="index.js"></script>
+```
 
+Sau khi đưa lên GitHub Pages, cần kiểm tra:
+
+* `index.html` tồn tại.
+* `index.css` tồn tại.
+* `index.js` tồn tại.
+* Tên file viết đúng chính xác.
+* Đường dẫn trong HTML chính xác.
+* Ba file nằm đúng thư mục.
+* JavaScript không phát sinh lỗi trong Console.
+
+---
+
+# 🔍 Checklist trước khi công bố
+
+```text
+☐ index.html hoạt động
+☐ index.css được tải
+☐ index.js được tải
+☐ Canvas hiển thị
+☐ Con lắc chuyển động
+☐ Nút Tạm dừng hoạt động
+☐ Reset hoạt động
+☐ Zoom hoạt động
+☐ Camera hoạt động
+☐ Thay đổi khối lượng hoạt động
+☐ Thay đổi chiều dài hoạt động
+☐ Thay đổi góc hoạt động
+☐ Thay đổi vận tốc góc hoạt động
+☐ Thay đổi trọng trường hoạt động
+☐ Ma sát hoạt động
+☐ Cản không khí hoạt động
+☐ Gió hoạt động
+☐ Lực ngoài hoạt động
+☐ Bảng năng lượng hoạt động
+☐ Cảm biến hoạt động
+☐ Không có lỗi Console
+☐ GitHub Pages tải đủ 3 file
+```
+
+---
+
+# 📁 Phiên bản mã nguồn
+
+```text
+Project
+│
+├── index.html
+├── index.css
+└── index.js
+```
+
+**HTML** → giao diện
+**CSS** → thiết kế
+**JS** → mô phỏng vật lý
+
+---
+
+# 🏁 Kết luận
+
+**Con lắc kép — Phòng thí nghiệm động lực học** được xây dựng theo hướng mô phỏng trực quan, cho phép người học thay đổi nhiều tham số và quan sát trực tiếp sự biến đổi của hệ.
+
+Việc tách dự án thành ba file:
+
+```text
 index.html
 index.css
 index.js
-Bước 2
-Kiểm tra index.html có tham chiếu đúng:
+```
 
-<link rel="stylesheet" href="index.css">
-<script src="index.js"></script>
-Bước 3
-Vào phần cấu hình GitHub Pages.
+giúp mã nguồn dễ quản lý, bảo trì và triển khai trên GitHub Pages hơn, đồng thời vẫn giữ nguyên chức năng của mô phỏng khi phần vật lý trong JavaScript không bị thay đổi.
 
-Chọn branch chứa mã nguồn của dự án.
+---
 
-Bước 4
-Mở URL GitHub Pages.
+<div align="center">
 
-Nếu trang chỉ hiện tiêu đề mà không có mô phỏng, kiểm tra trước:
+## ⚙️ CON LẮC KÉP — PHÒNG THÍ NGHIỆM ĐỘNG LỰC HỌC
 
-Tên file JS.
+**Interactive Physics Simulation**
 
-Tên file CSS.
+**© 2026 | © Copyright ATCX. All rights reserved**
 
-Đường dẫn trong index.html.
+</div>
 
-Console của trình duyệt.
-
-Việc file JS có được tải hay không.
-
-31. Trạng thái file HTML hiện tại
-File index.html hiện tại đã có tên index.html, nhưng nội dung đang
-tham chiếu:
-
-<link rel="stylesheet" href="double-pendulum.css">
-và:
-
-<script src="double-pendulum.js"></script>
-Nếu bạn đã đổi tên hai file thành:
-
-index.css
-index.js
-thì cần sửa hai đường dẫn trên thành:
-
-<link rel="stylesheet" href="index.css">
-<script src="index.js"></script>
-Đây là bước quan trọng để GitHub Pages tải đúng các file.
-
-32. Kết luận
-Dự án là một phòng thí nghiệm mô phỏng con lắc kép với nhiều khả năng
-điều chỉnh.
-
-Các nhóm chính gồm:
-
-Khối lượng
-↓
-Hình học
-↓
-Điều kiện ban đầu
-↓
-Trọng trường
-↓
-Ma sát
-↓
-Không khí
-↓
-Gió
-↓
-Chất lưu
-↓
-Rung điểm treo
-↓
-Lực ngoài
-↓
-Mô phỏng số
-↓
-Đo lường năng lượng
-↓
-Cảm biến động lực học
-Khi chỉnh sửa dự án, cần ưu tiên nguyên tắc:
-
-Tách file không đồng nghĩa với thay đổi vật lý.
-
-Nếu mục tiêu là giữ nguyên mô phỏng ban đầu, phần tính toán vật lý trong
-JavaScript cần được giữ nguyên và chỉ thay đổi vị trí lưu trữ mã nguồn.
