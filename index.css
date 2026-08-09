@@ -44,10 +44,15 @@ button.primary{background:#2e8ff0;border:0}button.force{background:#a47a20;borde
 .toggle-btn:hover { background: #1e2736; color: #fff; }
 .toggle-btn.flipped {
 .copyright {
+    position: fixed;
+    bottom: 8px;
+    left: 0;
+    width: 100%;
     text-align: center;
-    padding: 14px 10px;
     font-size: 12px;
-    opacity: 0.7;
+    color: rgba(255, 255, 255, 0.65);
+    z-index: 9999;
+    pointer-events: none;
 }
   transform: translateY(-50%) scaleX(-1);
   background: rgba(19, 26, 36, 0.7);
