@@ -280,12 +280,14 @@ button.force {
 
 .copyright {
   position: fixed;
+  left: 50%;
   bottom: 8px;
-  left: 0;
-  width: calc(100% - 420px);
+  transform: translateX(-50%);
+  width: max-content;
   text-align: center;
   font-size: 13px;
   color: #8fa3b8;
   z-index: 9999;
   pointer-events: none;
+  white-space: nowrap;
 }
