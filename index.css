@@ -43,6 +43,12 @@ button.primary{background:#2e8ff0;border:0}button.force{background:#a47a20;borde
 }
 .toggle-btn:hover { background: #1e2736; color: #fff; }
 .toggle-btn.flipped {
+.copyright {
+    text-align: center;
+    padding: 14px 10px;
+    font-size: 12px;
+    opacity: 0.7;
+}
   transform: translateY(-50%) scaleX(-1);
   background: rgba(19, 26, 36, 0.7);
   border-right: 1px solid var(--line);
