@@ -286,6 +286,7 @@ button.force {
   width: max-content;
   text-align: center;
   font-size: 13px;
+  line-height: 1.6;
   color: #8fa3b8;
   z-index: 9999;
   pointer-events: none;
