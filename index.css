@@ -279,11 +279,13 @@ button.force {
 }
 
 .copyright {
-  width: 100%;
+  position: fixed;
+  bottom: 8px;
+  left: 0;
+  width: calc(100% - 420px);
   text-align: center;
-  padding: 18px 10px;
-  margin: 0;
   font-size: 13px;
   color: #8fa3b8;
-  box-sizing: border-box;
+  z-index: 9999;
+  pointer-events: none;
 }
