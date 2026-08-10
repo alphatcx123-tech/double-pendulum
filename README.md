@@ -774,7 +774,7 @@ giúp mã nguồn dễ quản lý, bảo trì và triển khai trên GitHub Page
 
 > **Build simple. Think deep. Create useful things.**
 
-📝 **Smart Text Counter & File Editor**
+📝 **Double-Pendulum**
 
 ⚡ Lightweight.
 🌐 Browser-based.
