@@ -1,1 +1,9 @@
-(function(){try{window.ATCXSettings={key:"atcx_settings",load:function(){return JSON.parse(localStorage.getItem(this.key)||"{}")},save:function(v){localStorage.setItem(this.key,JSON.stringify(v))}}}catch(e){}})();
+(function(){
+try{
+window.ATCXSettings={
+key:"atcx_settings",
+load:function(){return JSON.parse(localStorage.getItem(this.key)||"{}")},
+save:function(v){localStorage.setItem(this.key,JSON.stringify(v))}
+};
+}catch(e){}
+})();
