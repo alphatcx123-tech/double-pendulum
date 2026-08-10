@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết — Smart Text Counter &amp; File Editor</title>
+<style>
+:root {
+  --bg:#f6f8fb; --surface:#ffffff; --text:#1f2937; --muted:#64748b;
+  --border:#e2e8f0; --accent:#2563eb; --code:#f1f5f9;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  line-height:1.7;
+}
+.page {
+  width:min(980px,calc(100% - 28px)); margin:28px auto 60px;
+}
+.topbar {
+  position:sticky; top:0; z-index:10; padding:12px 0;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);
+}
+.back {
+  display:inline-flex; align-items:center; gap:8px; padding:9px 14px;
+  border:1px solid var(--border); border-radius:10px; background:var(--surface);
+  color:var(--text); text-decoration:none; font-weight:700;
+  box-shadow:0 4px 14px rgba(15,23,42,.06);
+}
+article {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:34px 42px;
+  box-shadow:0 12px 35px rgba(15,23,42,.07);
+}
+h1 { font-size:clamp(1.8rem,4vw,2.7rem); line-height:1.2; margin:0 0 24px; }
+h2 { margin-top:2.2em; padding-bottom:7px; border-bottom:1px solid var(--border); }
+h3 { margin-top:1.6em; }
+p { margin:1em 0; }
+a { color:var(--accent); }
+blockquote {
+  margin:20px 0; padding:14px 18px; border-left:4px solid var(--accent);
+  background:#eff6ff; border-radius:8px;
+}
+code { background:var(--code); padding:2px 6px; border-radius:6px; }
+pre {
+  overflow:auto; background:#0f172a; color:#e2e8f0; padding:18px;
+  border-radius:12px; line-height:1.55;
+}
+pre code { background:transparent; padding:0; }
+table { width:100%; border-collapse:collapse; margin:20px 0; overflow:hidden; }
+th,td { border:1px solid var(--border); padding:10px 12px; text-align:left; }
+th { background:var(--code); }
+.author-card {
+  margin-top:48px; padding:24px; border:1px solid var(--border);
+  border-radius:16px; background:linear-gradient(135deg,#eff6ff,#fff);
+}
+.author-card h2 { margin:4px 0 6px; border:0; padding:0; }
+.author-label { color:var(--accent); font-weight:800; }
+.site-footer {
+  text-align:center; color:var(--muted); padding:24px 10px 8px;
+  font-size:.86rem;
+}
+.site-footer .copyright { font-weight:700; }
+@media (max-width:650px) {
+  article { padding:24px 18px; border-radius:15px; }
+  .page { width:min(100% - 18px,980px); margin-top:10px; }
+  pre { font-size:.82rem; }
+  table { display:block; overflow-x:auto; white-space:nowrap; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <a class="back" href="javascript:history.back()">← Quay lại</a>
+  </div>
+  <article>
+    <h1>Cookie trong lập trình Web — Giải thích chi tiết</h1>
+<h2>1. Cookie là gì?</h2>
+<p>Trong lập trình web, <strong>Cookie</strong> là một lượng dữ liệu nhỏ mà website yêu cầu trình duyệt lưu lại trên thiết bị của người dùng. Sau đó, trình duyệt có thể <strong>tự động gửi Cookie đó trở lại website trong những lần truy cập/request tiếp theo</strong>.</p>
+<p>Nói đơn giản:</p>
+<blockquote><strong>Cookie = “mẩu ghi nhớ” của website được trình duyệt lưu trên máy bạn.</strong></blockquote>
+<p>Ví dụ bạn vào một website, chọn <strong>Dark Mode</strong>. Website có thể lưu:</p>
+<pre><code>id=&quot;tm68a8&quot;
+theme=dark</code></pre>
+<p>Lần sau bạn mở lại website → JavaScript đọc Cookie → biết bạn thích Dark Mode → tự bật Dark Mode.</p>
+<hr>
+<h2>2. Cookie nằm ở đâu?</h2>
+<p>Cookie được quản lý bởi <strong>trình duyệt</strong> như Chrome, Edge, Firefox...</p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;v1d93j&quot;
+Website
+   ↓
+Chrome
+   ↓
+Cookie Storage
+   ├── theme=dark
+   ├── language=vi
+   └── consent=yes</code></pre>
+<p>Website <strong>không trực tiếp tự ý ghi file vào ổ C:</strong> của bạn.</p>
+<p>Trình duyệt đứng giữa và quản lý Cookie.</p>
+<hr>
+<h2>3. Cookie hoạt động như thế nào?</h2>
+<p>Có hai phía:</p>
+<ul><li><strong>Server</strong>: máy chủ website.</li><li><strong>Client</strong>: trình duyệt của bạn.</li></ul>
+<p>Ví dụ bạn đăng nhập:</p>
+<pre><code>id=&quot;onar8x&quot;
+Bạn
+ │
+ │ POST /login
+ │ username + password
+ ↓
+Server
+ │
+ │ xác thực thành công
+ │
+ │ Set-Cookie: session=ABC123
+ ↓
+Chrome
+ │
+ │ lưu Cookie
+ ↓
+Cookie Storage</code></pre>
+<p>Sau đó bạn truy cập:</p>
+<pre><code>id=&quot;zxxd87&quot;
+GET /profile
+Cookie: session=ABC123</code></pre>
+<p>Server nhìn thấy:</p>
+<pre><code>id=&quot;riz0s2&quot;
+session=ABC123</code></pre>
+<p>và hiểu:</p>
+<blockquote>"À, đây là phiên đăng nhập của người dùng này."</blockquote>
+<hr>
+<h2>4. Cookie có thể chứa gì?</h2>
+<p>Cookie thường chứa các thông tin nhỏ như:</p>
+<pre><code>id=&quot;dpxh3i&quot;
+theme=dark
+language=vi
+cookie_consent=true
+session_id=abc123</code></pre>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;s3sj70&quot;
+user=quan
+theme=dark
+language=vi</code></pre>
+<p>Nhưng <strong>không nên lưu dữ liệu nhạy cảm trực tiếp trong Cookie</strong>, chẳng hạn:</p>
+<pre><code>id=&quot;l2e8l0&quot;
+password=123456
+credit_card=...</code></pre>
+<p>Đặc biệt:</p>
+<blockquote><strong>Cookie không phải nơi để lưu mật khẩu.</strong></blockquote>
+<hr>
+<h2>5. Cookie có phải file không?</h2>
+<p>Về mặt khái niệm, bạn có thể hiểu nó như một dạng <strong>key-value storage</strong>:</p>
+<pre><code>id=&quot;bygej3&quot;
+key        value
+-----------------------
+theme      dark
+language   vi
+consent    true</code></pre>
+<p>Nhưng trình duyệt quản lý cách lưu trữ bên dưới. Bạn không nên giả định nó là một file <code>.cookie</code> đơn giản nằm đâu đó trên ổ đĩa.</p>
+<hr>
+<h2>6. Cookie khác LocalStorage như thế nào?</h2>
+<p>Đây là phần rất quan trọng nếu bạn đang làm website.</p>
+<table><thead><tr><th>Đặc điểm</th><th>Cookie</th><th>localStorage</th></tr></thead><tbody><tr><td>Dung lượng</td><td>Nhỏ</td><td>Lớn hơn nhiều</td></tr><tr><td>Tự gửi lên server</td><td>✅ Có</td><td>❌ Không</td></tr><tr><td>JavaScript đọc được</td><td>Có, nếu không <code>HttpOnly</code></td><td>✅ Có</td></tr><tr><td>Dùng lưu đăng nhập</td><td>✅ Rất phổ biến</td><td>Không lý tưởng</td></tr><tr><td>Lưu theme</td><td>✅</td><td>✅</td></tr><tr><td>Lưu ngôn ngữ</td><td>✅</td><td>✅</td></tr><tr><td>Lưu dữ liệu lớn</td><td>❌</td><td>❌</td></tr><tr><td>Có thời hạn</td><td>✅</td><td>Thường tồn tại đến khi xóa</td></tr><tr><td>Gửi theo HTTP request</td><td>✅</td><td>❌</td></tr></tbody></table>
+<p>Ví dụ:</p>
+<h3>Cookie</h3>
+<pre><code>id=&quot;ezph3p&quot;
+document.cookie = &quot;theme=dark; max-age=31536000; path=/&quot;;</code></pre>
+<h3>localStorage</h3>
+<pre><code>id=&quot;7afxj9&quot;
+localStorage.setItem(&quot;theme&quot;, &quot;dark&quot;);</code></pre>
+<p>Sau đó:</p>
+<pre><code>id=&quot;uno0p9&quot;
+localStorage.getItem(&quot;theme&quot;);</code></pre>
+<p>→</p>
+<pre><code>id=&quot;2ka2zr&quot;
+dark</code></pre>
+<hr>
+<h2>7. Cookie có phải virus không?</h2>
+<p><strong>Không.</strong></p>
+<p>Cookie bản thân nó chỉ là dữ liệu.</p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;e8ah72&quot;
+language=vi
+theme=dark</code></pre>
+<p>hoàn toàn bình thường.</p>
+<p>Nhưng Cookie có thể được sử dụng trong <strong>tracking</strong>.</p>
+<p>Ví dụ một hệ thống quảng cáo có thể tạo identifier:</p>
+<pre><code>id=&quot;eghnr4&quot;
+tracking_id=8F31A92B</code></pre>
+<p>Sau đó dùng nó để nhận diện trình duyệt giữa nhiều lần truy cập.</p>
+<p>Vì vậy Cookie có liên quan đến <strong>privacy (quyền riêng tư)</strong>.</p>
+<hr>
+<h2>8. First-party Cookie và Third-party Cookie</h2>
+<p>Có hai khái niệm quan trọng.</p>
+<h3>First-party Cookie</h3>
+<p>Bạn đang ở:</p>
+<pre><code>id=&quot;wnjoai&quot;
+example.com</code></pre>
+<p>và chính:</p>
+<pre><code>id=&quot;efm59x&quot;
+example.com</code></pre>
+<p>tạo Cookie.</p>
+<p>→ <strong>First-party Cookie</strong></p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;u80ezd&quot;
+theme=dark</code></pre>
+<p>Website của bạn có thể dùng loại này để nhớ:</p>
+<ul><li>Dark/Light Mode</li><li>Ngôn ngữ</li><li>Trạng thái đăng nhập</li><li>Đồng ý Cookie</li></ul>
+<hr>
+<h3>Third-party Cookie</h3>
+<p>Bạn đang ở:</p>
+<pre><code>id=&quot;mkso6y&quot;
+example.com</code></pre>
+<p>nhưng một dịch vụ bên ngoài có thể liên quan đến Cookie của domain khác.</p>
+<p>Ví dụ trước đây các hệ thống quảng cáo/tracking thường sử dụng cơ chế này.</p>
+<p>Mục đích có thể là:</p>
+<pre><code>id=&quot;7yhl0u&quot;
+Website A
+   ↓
+Third-party service
+   ↓
+tracking identifier</code></pre>
+<p>Third-party Cookie đã bị các trình duyệt hiện đại hạn chế mạnh hơn trước vì vấn đề privacy.</p>
+<hr>
+<h2>9. Cookie có thời hạn</h2>
+<p>Cookie có thể được thiết lập thời gian sống.</p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;2faf2y&quot;
+theme=dark
+Expires=2027-08-08</code></pre>
+<p>Hoặc:</p>
+<pre><code>id=&quot;g9z37t&quot;
+Max-Age=31536000</code></pre>
+<p><code>31536000</code> giây ≈ <strong>1 năm</strong>.</p>
+<p>Khi hết hạn:</p>
+<pre><code>id=&quot;xmu3r0&quot;
+Cookie
+   ↓
+expired
+   ↓
+Browser xóa/không gửi nữa</code></pre>
+<hr>
+<h2>10. Session Cookie</h2>
+<p>Có một loại rất thú vị:</p>
+<p><strong>Session Cookie</strong></p>
+<p>Nó thường không có thời hạn dài được chỉ định.</p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;rjtj46&quot;
+session_id=ABC123</code></pre>
+<p>Cookie này thường dùng cho phiên làm việc.</p>
+<p>Khái niệm:</p>
+<pre><code>id=&quot;04moal&quot;
+Mở trình duyệt
+      ↓
+Session bắt đầu
+      ↓
+Website cấp session ID
+      ↓
+Bạn sử dụng website
+      ↓
+Session kết thúc</code></pre>
+<p>Tuy nhiên hành vi chính xác phụ thuộc vào cách website và trình duyệt cấu hình session.</p>
+<hr>
+<h2>11. Cookie bảo mật quan trọng</h2>
+<p>Cookie có một số thuộc tính cực kỳ quan trọng.</p>
+<h3><code>Secure</code></h3>
+<pre><code>id=&quot;78r27w&quot;
+Secure</code></pre>
+<p>Cookie chỉ được gửi qua HTTPS.</p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;gb013j&quot;
+Set-Cookie: session=ABC123; Secure</code></pre>
+<p>Điều này giúp tránh Cookie bị gửi qua kết nối HTTP không mã hóa.</p>
+<hr>
+<h3><code>HttpOnly</code></h3>
+<pre><code>id=&quot;0ie7k8&quot;
+Set-Cookie: session=ABC123; HttpOnly</code></pre>
+<p>Cookie có <code>HttpOnly</code> <strong>không thể được JavaScript thông thường đọc bằng <code>document.cookie</code></strong>.</p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;dd6iws&quot;
+document.cookie</code></pre>
+<p>sẽ không lấy được Cookie <code>HttpOnly</code>.</p>
+<p>Điều này rất hữu ích cho Cookie chứa <strong>session identifier</strong>.</p>
+<hr>
+<h3><code>SameSite</code></h3>
+<p>Đây là cơ chế giúp kiểm soát Cookie được gửi trong các ngữ cảnh cross-site.</p>
+<p>Ví dụ:</p>
+<pre><code>id=&quot;lyhox5&quot;
+SameSite=Strict</code></pre>
+<p>hoặc:</p>
+<pre><code>id=&quot;ljjg2b&quot;
+SameSite=Lax</code></pre>
+<p>hoặc:</p>
+<pre><code>id=&quot;6dwxrj&quot;
+SameSite=None; Secure</code></pre>
+<p>Nó có vai trò quan trọng trong việc giảm một số rủi ro như <strong>CSRF (Cross-Site Request Forgery)</strong>.</p>
+<hr>
+<h2>12. Ví dụ thực tế cho website</h2>
+<p>Giả sử bạn có website:</p>
+<pre><code>id=&quot;vfln5h&quot;
+ATCX</code></pre>
+<p>Bạn muốn khi người dùng vào lần đầu tiên hiện:</p>
+<blockquote>Website này sử dụng Cookie để lưu cài đặt của bạn. Bạn có đồng ý không?</blockquote>
+<p>Có thể lưu:</p>
+<pre><code>id=&quot;ixljoz&quot;
+cookie_consent=true</code></pre>
+<p>Lần sau:</p>
+<pre><code>id=&quot;56lx9x&quot;
+Browser
+   ↓
+Cookie: cookie_consent=true
+   ↓
+Website kiểm tra
+   ↓
+Đã đồng ý?
+   ↓
+Có
+   ↓
+Không hiện banner nữa</code></pre>
+<p>JavaScript đơn giản:</p>
+<pre><code>document.cookie = &quot;cookie_consent=true; max-age=31536000; path=/&quot;;</code></pre>
+<p>Kiểm tra:</p>
+<pre><code>console.log(document.cookie);</code></pre>
+<p>Có thể thấy:</p>
+<pre><code>cookie_consent=true</code></pre>
+<hr>
+<h2>13. Ví dụ kết hợp Dark Mode + Cookie</h2>
+<p>Bạn có thể lưu:</p>
+<pre><code>theme=dark</code></pre>
+<p>Khi người dùng chọn Dark:</p>
+<pre><code>document.cookie = &quot;theme=dark; max-age=31536000; path=/&quot;;</code></pre>
+<p>Khi website mở:</p>
+<pre><code>const cookies = document.cookie;
+
+if (cookies.includes(&quot;theme=dark&quot;)) {
+    document.documentElement.classList.add(&quot;dark&quot;);
+}</code></pre>
+<p>Luồng hoạt động:</p>
+<pre><code>Người dùng chọn Dark Mode
+          ↓
+JavaScript
+          ↓
+theme=dark
+          ↓
+Cookie
+          ↓
+Đóng website
+          ↓
+Mở lại
+          ↓
+JavaScript đọc Cookie
+          ↓
+Dark Mode được khôi phục</code></pre>
+<p>Đây chính là một trong những trường hợp Cookie <strong>rất hợp lý</strong>.</p>
+<hr>
+<h2>14. Cookie có gửi dữ liệu lên server không?</h2>
+<p><strong>Có</strong>, và đây là điểm khác biệt lớn với <code>localStorage</code>.</p>
+<p>Ví dụ browser có:</p>
+<pre><code>session_id=ABC123</code></pre>
+<p>Khi gửi request đến domain phù hợp:</p>
+<pre><code>GET /dashboard
+Cookie: session_id=ABC123</code></pre>
+<p>Server nhận được:</p>
+<pre><code>session_id = ABC123</code></pre>
+<p>Trong khi:</p>
+<pre><code>localStorage.setItem(&quot;theme&quot;, &quot;dark&quot;);</code></pre>
+<p>thì browser <strong>không tự động</strong> gửi:</p>
+<pre><code>theme=dark</code></pre>
+<p>mỗi HTTP request.</p>
+<hr>
+<h2>15. Cookie và đăng nhập</h2>
+<p>Một hệ thống đăng nhập hiện đại thường không làm:</p>
+<pre><code>Cookie:
+username=Quan
+password=123456</code></pre>
+<p>Mà thường là:</p>
+<pre><code>Cookie:
+session_id=random_value</code></pre>
+<p>Server giữ thông tin phiên:</p>
+<pre><code>session_id ABC123
+       ↓
+User ID 58291
+       ↓
+Logged in</code></pre>
+<p>Như vậy browser chỉ giữ một <strong>session identifier</strong>.</p>
+<p>Đây là mô hình quan trọng trong web backend.</p>
+<hr>
+<h2>16. Cookie có thể bị đánh cắp không?</h2>
+<p><strong>Có, nếu hệ thống bảo mật kém.</strong></p>
+<p>Ví dụ một website có lỗ hổng <strong>XSS (Cross-Site Scripting)</strong>.</p>
+<p>Nếu session Cookie không có <code>HttpOnly</code>, JavaScript độc hại có thể tìm cách đọc:</p>
+<pre><code>document.cookie</code></pre>
+<p>và lấy Cookie mà website cho phép JavaScript truy cập.</p>
+<p>Vì vậy Cookie bảo mật thường nên cân nhắc:</p>
+<pre><code>Secure
+HttpOnly
+SameSite=Lax</code></pre>
+<p>hoặc chính sách <code>SameSite</code> phù hợp với kiến trúc ứng dụng.</p>
+<hr>
+<h2>17. Cookie ≠ Cache</h2>
+<p>Hai cái này rất dễ nhầm.</p>
+<h3>Cookie</h3>
+<pre><code>&quot;Lưu thông tin/trạng thái của người dùng&quot;</code></pre>
+<p>Ví dụ:</p>
+<pre><code>theme=dark
+language=vi
+session=ABC123</code></pre>
+<h3>Cache</h3>
+<pre><code>&quot;Lưu tài nguyên để tải nhanh hơn&quot;</code></pre>
+<p>Ví dụ:</p>
+<pre><code>style.css
+logo.png
+app.js</code></pre>
+<p>Có thể hình dung:</p>
+<pre><code>Cookie → Website nhớ bạn
+
+Cache → Browser nhớ tài nguyên website</code></pre>
+<hr>
+<h2>18. Cookie ≠ Session ≠ LocalStorage</h2>
+<p>Ba khái niệm này liên quan nhưng <strong>không giống nhau</strong>:</p>
+<pre><code>Cookie
+   ↓
+Dữ liệu nhỏ, có thể tự gửi HTTP request
+
+localStorage
+   ↓
+Kho dữ liệu phía trình duyệt
+
+Session
+   ↓
+Trạng thái phiên làm việc của người dùng</code></pre>
+<p>Một website có thể dùng cả ba.</p>
+<p>Ví dụ:</p>
+<pre><code>Cookie
+└── session_id=ABC123
+
+Server
+└── Session ABC123
+      ├── user_id = 58291
+      └── logged_in = true
+
+localStorage
+└── editor_font_size=18</code></pre>
+<hr>
+<h2>19. Cookie Consent</h2>
+<p>Nếu website chỉ sử dụng Cookie <strong>cần thiết cho chức năng</strong>, cách xử lý pháp lý có thể khác với Cookie dùng cho <strong>analytics/quảng cáo/tracking</strong>.</p>
+<p>Đừng hiểu:</p>
+<blockquote>"Có Cookie = bắt buộc phải hiện popup xin phép."</blockquote>
+<p>Không đơn giản như vậy.</p>
+<p>Còn phụ thuộc:</p>
+<ul><li>Cookie dùng để làm gì</li><li>Dữ liệu nào được lưu</li><li>Có tracking hay không</li><li>Có bên thứ ba hay không</li><li>Người dùng ở quốc gia/khu vực nào</li><li>Luật áp dụng cho website</li></ul>
+<p>Ví dụ Cookie:</p>
+<pre><code>session_id</code></pre>
+<p>phục vụ đăng nhập có bản chất khác với:</p>
+<pre><code>advertising_tracking_id</code></pre>
+<hr>
+<h2>20. Nếu website chỉ có Dark Mode thì sao?</h2>
+<p>Nếu website chỉ cần:</p>
+<pre><code>theme=dark
+language=vi</code></pre>
+<p>thì bạn <strong>thậm chí có thể dùng <code>localStorage</code> thay Cookie</strong>:</p>
+<pre><code>localStorage.setItem(&quot;theme&quot;, &quot;dark&quot;);</code></pre>
+<p>và:</p>
+<pre><code>localStorage.setItem(&quot;language&quot;, &quot;vi&quot;);</code></pre>
+<p>Vì hai dữ liệu này <strong>không cần server nhận trong mỗi request</strong>.</p>
+<p>Ngược lại, nếu bạn cần:</p>
+<pre><code>session_id
+authentication
+server-side preferences</code></pre>
+<p>thì Cookie thường phù hợp hơn.</p>
+<hr>
+<h2>21. Tóm tắt bằng sơ đồ</h2>
+<pre><code>                    WEBSITE
+                       │
+             ┌─────────┴─────────┐
+             │                   │
+         Frontend             Backend
+             │                   │
+       JavaScript             Server
+             │                   │
+             └───────┬───────────┘
+                     │
+                 HTTP Request
+                     │
+                     ↓
+                 BROWSER
+                     │
+              ┌──────┴──────┐
+              │             │
+           Cookie       localStorage
+              │             │
+       Tự gửi HTTP       Không tự gửi
+       request phù hợp   lên server</code></pre>
+<h3>Nhớ ngắn gọn</h3>
+<blockquote><strong>Cookie là dữ liệu nhỏ do website yêu cầu trình duyệt lưu, dùng để duy trì trạng thái hoặc ghi nhớ một số thông tin; Cookie có thể được trình duyệt tự động gửi lại server trong các request phù hợp.</strong></blockquote>
+<hr>
+<h2>22. Gợi ý áp dụng cho website Smart Text Counter / File Editor</h2>
+<p>Nếu website là <strong>Smart Text Counter / File Editor</strong>, có thể phân chia như sau:</p>
+<h3>Cookie</h3>
+<p>Dùng cho:</p>
+<pre><code>cookie_consent
+session_id       ← nếu có hệ thống tài khoản/server</code></pre>
+<h3>localStorage</h3>
+<p>Dùng cho:</p>
+<pre><code>theme
+language
+editor_font_size
+editor_settings
+last_editor_mode
+UI_preferences</code></pre>
+<p>Ví dụ:</p>
+<pre><code>Browser
+│
+├── Cookie
+│   └── cookie_consent=true
+│
+└── localStorage
+    ├── theme=dark
+    ├── language=vi
+    ├── font_size=18
+    └── editor_mode=advanced</code></pre>
+<p>Cách phân chia này giúp tránh dùng Cookie cho những dữ liệu frontend không cần gửi lên server.</p>
+<hr>
+<h1>Kết luận</h1>
+<p>Cookie là một thành phần nền tảng của web, đặc biệt quan trọng trong:</p>
+<ul><li>Authentication</li><li>Session management</li><li>User preferences</li><li>Consent</li><li>Tracking</li><li>HTTP state management</li><li>Web security</li></ul>
+<p>Điểm cốt lõi cần nhớ:</p>
+<ol><li><strong>Cookie được trình duyệt lưu.</strong></li><li><strong>Cookie có thể được gửi tự động trong HTTP request phù hợp.</strong></li><li><strong>Cookie khác <code>localStorage</code>.</strong></li><li><strong>Không lưu password trực tiếp trong Cookie.</strong></li><li><strong><code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code> rất quan trọng đối với bảo mật.</strong></li><li><strong>Cookie có thể có thời hạn.</strong></li><li><strong>First-party và third-party Cookie có mục đích và vấn đề privacy khác nhau.</strong></li><li><strong>Session thường sử dụng Cookie để giữ session identifier.</strong></li><li><strong>Dark Mode/ngôn ngữ thường có thể dùng <code>localStorage</code> nếu không cần server.</strong></li><li><strong>Cookie Consent và tracking có liên quan đến yêu cầu pháp lý/privacy tùy trường hợp.</strong></li></ol>
+<section class="author-card">
+  <div class="author-label">👨‍💻 Người thực hiện</div>
+  <h2>ATCX</h2>
+  <p>Smart Text Counter &amp; File Editor được phát triển bởi <strong>ATCX</strong>.</p>
+</section>
+
+  </article>
+  <footer class="site-footer">
+    <div>© 2026 | © Copyright ATCX. All rights reserved.</div>
+  </footer>
+</div>
+</body>
+</html>
