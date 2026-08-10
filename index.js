@@ -1107,7 +1107,7 @@ function ui(){
     detail="Mô phỏng đã chuyển sang trạng thái an toàn. Chuyển động của khối không còn được tính như con lắc liên kết.";
     alert="🛑 Cảnh báo: hệ đã vượt giới hạn cơ học. Hãy giảm lực, khối lượng, tốc độ hoặc tăng độ bền/giảm tác động.";
     flow="Đã ngắt mô phỏng"; motionLevel="Dừng";
-  }else if(dE_info.K<=motionThreshold){
+  }else if(dE_info.K<=motionThreshold&&absOmega<=0.02&&dE_info.available<=energyScale*0.001){
     status="🟢 Gần dừng — động năng rất thấp";
     detail="Vận tốc góc và vận tốc của các khối đang rất nhỏ; phần lớn năng lượng động đã chuyển sang thế năng hoặc đã bị tiêu tán.";
     alert="🟢 Hệ sắp dừng. Nếu ma sát/cản vẫn khác 0, biên độ sẽ tiếp tục giảm.";
