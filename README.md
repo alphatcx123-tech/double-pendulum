@@ -770,6 +770,19 @@ giúp mã nguồn dễ quản lý, bảo trì và triển khai trên GitHub Page
 
 ---
 
+# ❤️ Made by ATCX
+
+> **Build simple. Think deep. Create useful things.**
+
+📝 **Smart Text Counter & File Editor**
+
+⚡ Lightweight.
+🌐 Browser-based.
+🔒 Client-side.
+🚀 Built with Web Technologies.
+
+---
+
 <div align="center">
 
 ## ⚙️ CON LẮC KÉP — PHÒNG THÍ NGHIỆM ĐỘNG LỰC HỌC
